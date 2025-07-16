@@ -25,3 +25,11 @@ class Config:
             "response_types": ["code"]
         }
     }
+
+    # False Positive: Выглядит как hardcoded secret, но это тестовый ключ
+TEST_ONLY_PUBLIC_KEY = """
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzX7X6N5Q7J7KQ8X9z0Yq
+... (тестовый ключ для демонстрации) ...
+-----END PUBLIC KEY-----
+"""  # False Positive: Это публичный ключ, не секрет

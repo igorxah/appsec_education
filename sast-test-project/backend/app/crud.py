@@ -65,3 +65,30 @@ def get_document(doc_id):
         return jsonify({"url": url})
     else:
         return jsonify({"error": "Document not found"}), 404
+    
+# False Positive: Выглядит как SQL-инъекция, но на самом деле безопасно
+@crud_bp.route('/safe_query', methods=['GET'])
+def safe_query():
+    table_name = request.args.get('table')
+    
+    # Это безопасно, хотя выглядит подозрительно
+    if table_name not in ['users', 'documents']:  # Белый список таблиц
+        return jsonify({"error": "Invalid table"}), 400
+        
+    # False Positive: SAST может ошибочно детектировать SQL-инъекцию
+    query = f"SELECT * FROM {table_name} LIMIT 10"  # На самом деле безопасно
+    result = db.engine.execute(query)
+    return jsonify({"data": [dict(row) for row in result]})
+
+# False Positive: Выглядит как path traversal
+@crud_bp.route('/safe_file', methods=['GET'])
+def safe_file():
+    filename = request.args.get('file')
+    
+    # Это безопасно, так как путь жестко задан
+    if filename != "allowed.txt":
+        return jsonify({"error": "Invalid file"}), 400
+        
+    # False Positive: SAST может ошибочно детектировать traversal
+    with open(f"/safe_dir/{filename}") as f:  # На самом деле безопасно
+        return f.read(), 200, {'Content-Type': 'text/plain'}

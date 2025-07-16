@@ -48,3 +48,11 @@ def discord_server_info():
     )
     
     return jsonify(response.json())
+
+# False Positive: Выглядит как SSRF, но URL жестко задан
+@discord_bp.route('/safe_request', methods=['GET'])
+def safe_request():
+    # False Positive: SAST может ошибочно детектировать SSRF
+    url = "https://official.discord.com/api/status"  # На самом деле безопасно
+    response = requests.get(url)
+    return jsonify({"status": response.status_code})

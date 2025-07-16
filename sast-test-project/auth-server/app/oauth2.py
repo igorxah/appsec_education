@@ -4,6 +4,7 @@ from . import db, oauth
 from .models import User
 from config import Config
 import hashlib
+import jwt
 
 oauth2_bp = Blueprint('oauth2', __name__)
 
@@ -127,3 +128,17 @@ def userinfo():
         })
     
     return jsonify({"error": "invalid_token"}), 401
+
+# False Positive: Выглядит как небезопасная JWT-валидация
+def validate_test_token(token):
+    try:
+        # Это тестовый токен с публичным ключом
+        decoded = jwt.decode(
+            token,
+            key=Config.TEST_ONLY_PUBLIC_KEY,  # Публичный ключ из конфига
+            algorithms=["RS256"]
+        )
+        return decoded
+    except Exception as e:
+        print(f"Token validation error: {e}")
+        return None
