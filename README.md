@@ -14,11 +14,10 @@
 
 ## Архитектура
 
-![Архитектура системы](docs/architecture.png)
+![88915c61d8c13108ef2709a51ed83f1935324ba3](https://github.com/user-attachments/assets/83bbf2fc-aee3-432e-8366-222cfc3e716a)
 
-## Быстрый старт
 
-### Требования
+### Требования для запуска
 - Docker 20.10+
 - Docker Compose 1.29+
 
